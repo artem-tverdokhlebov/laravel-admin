@@ -6,6 +6,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Middleware\Pjax;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -271,6 +272,12 @@ class Model
         if ($this->relation instanceof HasMany) {
             return [
                 $this->relation->getForeignKeyName() => $this->relation->getParentKey(),
+            ];
+        }
+
+        if ($this->relation instanceof BelongsToMany) {
+            return [
+                $this->relation->getForeignPivotKeyName() => $this->relation->getParent()->getKey()
             ];
         }
 

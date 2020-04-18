@@ -4,9 +4,10 @@
             @if(url()->isValidUrl($item['uri']))
                 <a href="{{ $item['uri'] }}" target="_blank">
             @else
-                 <a href="{{ admin_url($item['uri']) }}">
+                <a href="{{ admin_url($item['uri']) }}">
             @endif
-                <i class="fa {{$item['icon']}}"></i>
+                <i class="fa {{$item['icon']}} fa-fw"></i>
+
                 @if (Lang::has($titleTranslation = 'admin.menu_titles.' . trim(str_replace(' ', '_', strtolower($item['title'])))))
                     <span>{{ __($titleTranslation) }}</span>
                 @else
@@ -17,7 +18,7 @@
     @else
         <li class="treeview">
             <a href="#">
-                <i class="fa {{ $item['icon'] }}"></i>
+                <i class="fa {{ $item['icon'] }} fa-fw"></i>
                 @if (Lang::has($titleTranslation = 'admin.menu_titles.' . trim(str_replace(' ', '_', strtolower($item['title'])))))
                     <span>{{ __($titleTranslation) }}</span>
                 @else

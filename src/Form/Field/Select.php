@@ -233,6 +233,12 @@ EOT;
                     $resources[] = Arr::get($value, $idField);
                 } else {
                     $resources = array_column($value, $idField);
+
+                    // FIX: this is a fix for multipleSelect and field with IDs
+                    if (empty($resources)) {
+                        $resources = $value;
+                    }
+                    //
                 }
             } else {
                 $resources[] = $value;
