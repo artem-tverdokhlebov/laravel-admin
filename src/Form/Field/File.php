@@ -16,7 +16,7 @@ class File extends Field
      * @var array
      */
     protected static $css = [
-        '/vendor/laravel-admin/bootstrap-fileinput/css/fileinput.min.css?v=4.5.2',
+        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.3/css/fileinput.min.css',
     ];
 
     /**
@@ -25,8 +25,10 @@ class File extends Field
      * @var array
      */
     protected static $js = [
-        '/vendor/laravel-admin/bootstrap-fileinput/js/plugins/canvas-to-blob.min.js',
-        '/vendor/laravel-admin/bootstrap-fileinput/js/fileinput.min.js?v=4.5.2',
+        'https://cdnjs.cloudflare.com/ajax/libs/javascript-canvas-to-blob/3.17.0/js/canvas-to-blob.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/js/plugins/piexif.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/js/plugins/purify.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.3/js/fileinput.min.js',
     ];
 
     /**

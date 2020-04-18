@@ -66,9 +66,9 @@ class Paginator extends AbstractTool
     protected function paginationRanger()
     {
         $parameters = [
-            'first' => $this->paginator->firstItem(),
-            'last'  => $this->paginator->lastItem(),
-            'total' => $this->paginator->total(),
+            'first' => $this->paginator->firstItem() ?? 0,
+            'last'  => $this->paginator->lastItem() ?? 0,
+            'total' => $this->paginator->total() ?? 0,
         ];
 
         $parameters = collect($parameters)->flatMap(function ($parameter, $key) {
