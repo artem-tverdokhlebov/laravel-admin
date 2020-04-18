@@ -143,6 +143,7 @@ class Form implements Renderable
         'decimal'        => Field\Decimal::class,
         'display'        => Field\Display::class,
         'divider'        => Field\Divider::class,
+        'editor'         => Field\Editor::class,
         'embeds'         => Field\Embeds::class,
         'email'          => Field\Email::class,
         'file'           => Field\File::class,

@@ -65,6 +65,7 @@ class HasMany extends Field
     protected $options = [
         'allowCreate' => true,
         'allowDelete' => true,
+        'orderable' => false
     ];
 
     /**
@@ -337,6 +338,10 @@ class HasMany extends Field
 
         $form->hidden(NestedForm::REMOVE_FLAG_NAME)->default(0)->addElementClass(NestedForm::REMOVE_FLAG_CLASS);
 
+        if ($this->options['orderable']) {
+            $form->hidden($this->options['orderable_column_name'])->addElementClass('orderable_column');
+        }
+
         return $form;
     }
 
@@ -475,6 +480,18 @@ class HasMany extends Field
         $removeClass = NestedForm::REMOVE_FLAG_CLASS;
         $defaultKey = NestedForm::DEFAULT_KEY_NAME;
 
+        $orderableScript = '';
+
+        if ($this->options['orderable']) {
+            $orderableScript = <<<EOT
+
+$('.has-many-{$this->column}-forms').find('.has-many-{$this->column}-form').each(function(index) {
+    $(this).find('input.orderable_column').val(index);
+});
+
+EOT;
+        }
+
         /**
          * When add a new sub form, replace all element key in new sub form.
          *
@@ -483,6 +500,7 @@ class HasMany extends Field
          * {count} is increment number of current sub form count.
          */
         $script = <<<EOT
+
 var index = 0;
 $('#has-many-{$this->column}').off('click', '.add').on('click', '.add', function () {
 
@@ -493,17 +511,62 @@ $('#has-many-{$this->column}').off('click', '.add').on('click', '.add', function
     var template = tpl.html().replace(/{$defaultKey}/g, index);
     $('.has-many-{$this->column}-forms').append(template);
     {$templateScript}
+
+    {$orderableScript}
+
     return false;
 });
 
 $('#has-many-{$this->column}').off('click', '.remove').on('click', '.remove', function () {
-    $(this).closest('.has-many-{$this->column}-form').find('input').removeAttr('required');
-    $(this).closest('.has-many-{$this->column}-form').hide();
-    $(this).closest('.has-many-{$this->column}-form').find('.$removeClass').val(1);
+    var first_input_name = $(this).closest('.has-many-{$this->column}-form').find('input[name]').first().attr('name');
+    if (first_input_name.match('{$this->column}\\\[new_')) {
+        $(this).closest('.has-many-{$this->column}-form').remove();
+    } else {
+        $(this).closest('.has-many-{$this->column}-form').find('input').removeAttr('required');
+        $(this).closest('.has-many-{$this->column}-form').hide();
+        $(this).closest('.has-many-{$this->column}-form').find('.$removeClass').val(1);
+    }
     return false;
 });
 
 EOT;
+
+        if ($this->options['orderable']) {
+            $script .= <<<EOT
+
+$('#has-many-{$this->column}').off('click', '.move-up').on('click', '.move-up', function () {
+    var form = $(this).closest('.has-many-{$this->column}-form');
+
+    form.prev().before(form);
+
+    $('html, body').animate({
+        scrollTop: form.offset().top - (($(window).height() - form.height()) / 2)
+    }, 1000);
+
+    {$orderableScript}
+
+    return false;
+});
+
+$('#has-many-{$this->column}').off('click', '.move-down').on('click', '.move-down', function () {
+    var form = $(this).closest('.has-many-{$this->column}-form');
+
+    form.next().after(form);
+
+    $('html, body').animate({
+        scrollTop: form.offset().top - (($(window).height() - form.height()) / 2)
+    }, 1000);
+
+    {$orderableScript}
+
+    return false;
+});
+
+{$orderableScript}
+
+EOT;
+
+        }
 
         Admin::script($script);
     }
@@ -597,13 +660,13 @@ $('#has-many-{$this->column}').on('click', '.add', function () {
 });
 
 $('#has-many-{$this->column}').on('click', '.remove', function () {
-    var first_input_name = $(this).closest('.has-many-{$this->column}-form').find('input:first').attr('name');
+    var first_input_name = $(this).closest('.has-many-{$this->column}-form').find('input[name]').first().attr('name');
     if (first_input_name.match('{$this->column}\\\[new_')) {
         $(this).closest('.has-many-{$this->column}-form').remove();
     } else {
+        $(this).closest('.has-many-{$this->column}-form').find('input').removeAttr('required');
         $(this).closest('.has-many-{$this->column}-form').hide();
         $(this).closest('.has-many-{$this->column}-form').find('.$removeClass').val(1);
-        $(this).closest('.has-many-{$this->column}-form').find('input').removeAttr('required');
     }
     return false;
 });
@@ -611,6 +674,21 @@ $('#has-many-{$this->column}').on('click', '.remove', function () {
 EOT;
 
         Admin::script($script);
+    }
+
+    /**
+     * Enable order.
+     *
+     * @param string $columnName
+     *
+     * @return $this
+     */
+    public function orderable($columnName = 'order_column')
+    {
+        $this->options['orderable'] = true;
+        $this->options['orderable_column_name'] = $columnName;
+
+        return $this;
     }
 
     /**
