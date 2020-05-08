@@ -167,7 +167,7 @@ class File extends Field
      */
     protected function initialCaption($caption)
     {
-        return basename($caption);
+        return rawurldecode(basename($caption));
     }
 
     /**
@@ -175,7 +175,7 @@ class File extends Field
      */
     protected function initialPreviewConfig()
     {
-        $config = ['caption' => basename($this->value), 'key' => 0];
+        $config = ['caption' => rawurldecode(basename($this->value)), 'key' => 0];
 
         $config = array_merge($config, $this->guessPreviewType($this->value));
 

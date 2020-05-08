@@ -217,6 +217,7 @@ class MultipleFile extends Field
         }
 
         $caption = array_map('basename', $caption);
+        $caption = array_map('rawurldecode', $caption);
 
         return implode(',', $caption);
     }
@@ -237,7 +238,7 @@ class MultipleFile extends Field
             }
 
             $preview = array_merge([
-                'caption' => basename($file),
+                'caption' => rawurldecode(basename($file)),
                 'key'     => $index,
             ], $this->guessPreviewType($file));
 
