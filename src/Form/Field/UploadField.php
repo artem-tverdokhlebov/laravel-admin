@@ -472,6 +472,11 @@ trait UploadField
         $index = 1;
         $extension = $file->getClientOriginalExtension();
         $original = $file->getClientOriginalName();
+
+        if (strstr($original, $extension)) {
+            $original = pathinfo($original, PATHINFO_FILENAME);
+        }
+
         $new = sprintf('%s_%s.%s', $original, $index, $extension);
 
         while ($this->storage->exists("{$this->getDirectory()}/$new")) {
