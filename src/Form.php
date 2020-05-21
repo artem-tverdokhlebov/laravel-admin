@@ -6,8 +6,8 @@ use Closure;
 use Encore\Admin\Exception\Handler;
 use Encore\Admin\Form\Builder;
 use Encore\Admin\Form\Concerns\HasFields;
-use Encore\Admin\Form\Field;
 use Encore\Admin\Form\Concerns\HasHooks;
+use Encore\Admin\Form\Field;
 use Encore\Admin\Form\Layout\Layout;
 use Encore\Admin\Form\Row;
 use Encore\Admin\Form\Tab;
@@ -31,9 +31,9 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class Form implements Renderable
 {
-    use HasHooks,
-        HasFields,
-        ShouldSnakeAttributes;
+    use HasHooks;
+    use HasFields;
+    use ShouldSnakeAttributes;
     /**
      * Remove flag in `has many` form.
      */
@@ -190,9 +190,9 @@ class Form implements Renderable
     /**
      * Use tab to split form.
      *
-     * @param string $title
+     * @param string  $title
      * @param Closure $content
-     * @param bool $active
+     * @param bool    $active
      *
      * @return $this
      */
@@ -283,7 +283,7 @@ class Form implements Renderable
      * Remove files in record.
      *
      * @param Model $model
-     * @param bool $forceDelete
+     * @param bool  $forceDelete
      */
     protected function deleteFiles(Model $model, $forceDelete = false)
     {
@@ -378,7 +378,7 @@ class Form implements Renderable
             return response()->json([
                 'status'    => true,
                 'message'   => $message,
-                'display'  => $this->applayFieldDisplay()
+                'display'   => $this->applayFieldDisplay(),
             ]);
         }
 
@@ -394,7 +394,7 @@ class Form implements Renderable
 
         /** @var Field $field */
         foreach ($this->builder()->fields() as $field) {
-            if (! \request()->has($field->column())) {
+            if (!\request()->has($field->column())) {
                 continue;
             }
 
@@ -484,7 +484,7 @@ class Form implements Renderable
     /**
      * Handle update.
      *
-     * @param int $id
+     * @param int  $id
      * @param null $data
      *
      * @return bool|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|mixed|null|Response
@@ -761,82 +761,54 @@ class Form implements Renderable
                     }
                     break;
                 case $relation instanceof Relations\HasOne:
-
-                    $related = $this->model->$name;
-
-                    // if related is empty
-                    if (is_null($related)) {
-                        $related = $relation->getRelated();
-                        $qualifiedParentKeyName = $relation->getQualifiedParentKeyName();
-                        $localKey = Arr::last(explode('.', $qualifiedParentKeyName));
-                        $related->{$relation->getForeignKeyName()} = $this->model->{$localKey};
-                    }
+                case $relation instanceof Relations\MorphOne:
+                    $related = $this->model->getRelationValue($name) ?: $relation->getRelated();
 
                     foreach ($prepared[$name] as $column => $value) {
                         $related->setAttribute($column, $value);
                     }
 
-                    $related->save();
+                    // save child
+                    $relation->save($related);
                     break;
                 case $relation instanceof Relations\BelongsTo:
                 case $relation instanceof Relations\MorphTo:
+                    $related = $this->model->getRelationValue($name) ?: $relation->getRelated();
 
-                    $parent = $this->model->$name;
-
-                    // if related is empty
-                    if (is_null($parent)) {
-                        $parent = $relation->getRelated();
-                    }
-
-                    foreach ($prepared[$name] as $column => $value) {
-                        $parent->setAttribute($column, $value);
-                    }
-
-                    $parent->save();
-
-                    // When in creating, associate two models
-                    $foreignKeyMethod = version_compare(app()->version(), '5.8.0', '<') ? 'getForeignKey' : 'getForeignKeyName';
-                    if (!$this->model->{$relation->{$foreignKeyMethod}()}) {
-                        $this->model->{$relation->{$foreignKeyMethod}()} = $parent->getKey();
-
-                        $this->model->save();
-                    }
-
-                    break;
-                case $relation instanceof Relations\MorphOne:
-                    $related = $this->model->$name;
-                    if ($related === null) {
-                        $related = $relation->make();
-                    }
                     foreach ($prepared[$name] as $column => $value) {
                         $related->setAttribute($column, $value);
                     }
+
+                    // save parent
                     $related->save();
+
+                    // save child (self)
+                    $relation->associate($related)->save();
                     break;
                 case $relation instanceof Relations\HasMany:
                 case $relation instanceof Relations\MorphMany:
-
                     foreach ($prepared[$name] as $related) {
-                        /** @var Relations\Relation $relation */
-                        $relation = $this->model()->$name();
+                        /** @var Relations\HasOneOrMany $relation */
+                        $relation = $this->model->$name();
 
                         $keyName = $relation->getRelated()->getKeyName();
 
-                        $instance = $relation->findOrNew(Arr::get($related, $keyName));
+                        /** @var Model $child */
+                        $child = $relation->findOrNew(Arr::get($related, $keyName));
 
                         if (Arr::get($related, static::REMOVE_FLAG_NAME) == 1) {
-                            $instance->delete();
-
+                            $child->delete();
                             continue;
                         }
 
                         Arr::forget($related, static::REMOVE_FLAG_NAME);
 
-                        $instance->fill($related);
+                        foreach ($related as $colum => $value) {
+                            $child->setAttribute($colum, $value);
+                        }
 
-                        $instance->save();
+                        $child->save();
                     }
-
                     break;
             }
         }
@@ -1222,10 +1194,24 @@ class Form implements Renderable
      * Set a submit confirm.
      *
      * @param string $message
+     * @param string $on
+     *
      * @return $this
      */
-    public function confirm(string $message)
+    public function confirm(string $message, $on = null)
     {
+        if ($on && !in_array($on, ['create', 'edit'])) {
+            throw new \InvalidArgumentException("The second paramater `\$on` must be one of ['create', 'edit']");
+        }
+
+        if ($on == 'create' && !$this->isCreating()) {
+            return;
+        }
+
+        if ($on == 'edit' && !$this->isEditing()) {
+            return;
+        }
+
         $this->builder()->confirm($message);
 
         return $this;
