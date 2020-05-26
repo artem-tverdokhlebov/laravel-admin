@@ -5,6 +5,7 @@ namespace Encore\Admin;
 use Closure;
 use Encore\Admin\Exception\Handler;
 use Encore\Admin\Form\Builder;
+use Encore\Admin\Form\Concerns\HandleCascadeFields;
 use Encore\Admin\Form\Concerns\HasFields;
 use Encore\Admin\Form\Concerns\HasHooks;
 use Encore\Admin\Form\Field;
@@ -33,6 +34,7 @@ class Form implements Renderable
 {
     use HasHooks;
     use HasFields;
+    use HandleCascadeFields;
     use ShouldSnakeAttributes;
     /**
      * Remove flag in `has many` form.
@@ -148,7 +150,7 @@ class Form implements Renderable
         $width = $this->builder->getWidth();
         $field->setWidth($width['field'], $width['label']);
 
-        $this->builder->fields()->push($field);
+        $this->fields()->push($field);
         $this->layout->addField($field);
 
         return $this;
@@ -168,6 +170,14 @@ class Form implements Renderable
     public function builder(): Builder
     {
         return $this->builder;
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function fields()
+    {
+        return $this->builder()->fields();
     }
 
     /**
@@ -294,7 +304,7 @@ class Form implements Renderable
 
         $data = $model->toArray();
 
-        $this->builder->fields()->filter(function ($field) {
+        $this->fields()->filter(function ($field) {
             return $field instanceof Field\File;
         })->each(function (Field\File $file) use ($data) {
             $file->setOriginal($data);
@@ -393,7 +403,7 @@ class Form implements Renderable
         $editable = [];
 
         /** @var Field $field */
-        foreach ($this->builder()->fields() as $field) {
+        foreach ($this->fields() as $field) {
             if (!\request()->has($field->column())) {
                 continue;
             }
@@ -827,7 +837,7 @@ class Form implements Renderable
         $prepared = [];
 
         /** @var Field $field */
-        foreach ($this->builder->fields() as $field) {
+        foreach ($this->fields() as $field) {
             $columns = $field->column();
 
             // If column not in input array data, then continue.
@@ -974,7 +984,7 @@ class Form implements Renderable
      */
     protected function getFieldByColumn($column)
     {
-        return $this->builder->fields()->first(
+        return $this->fields()->first(
             function (Field $field) use ($column) {
                 if (is_array($field->column())) {
                     return in_array($column, $field->column());
@@ -994,7 +1004,7 @@ class Form implements Renderable
     {
         $values = $this->model->toArray();
 
-        $this->builder->fields()->each(function (Field $field) use ($values) {
+        $this->fields()->each(function (Field $field) use ($values) {
             $field->setOriginal($values);
         });
     }
@@ -1022,7 +1032,7 @@ class Form implements Renderable
 
         $data = $this->model->toArray();
 
-        $this->builder->fields()->each(function (Field $field) use ($data) {
+        $this->fields()->each(function (Field $field) use ($data) {
             if (!in_array($field->column(), $this->ignored, true)) {
                 $field->fill($data);
             }
@@ -1062,7 +1072,7 @@ class Form implements Renderable
         $failedValidators = [];
 
         /** @var Field $field */
-        foreach ($this->builder->fields() as $field) {
+        foreach ($this->fields() as $field) {
             if (!$validator = $field->getValidator($input)) {
                 continue;
             }
@@ -1105,7 +1115,7 @@ class Form implements Renderable
         $relations = $columns = [];
 
         /** @var Field $field */
-        foreach ($this->builder->fields() as $field) {
+        foreach ($this->fields() as $field) {
             $columns[] = $field->column();
         }
 
@@ -1152,7 +1162,7 @@ class Form implements Renderable
      */
     public function setWidth($fieldWidth = 8, $labelWidth = 2): self
     {
-        $this->builder()->fields()->each(function ($field) use ($fieldWidth, $labelWidth) {
+        $this->fields()->each(function ($field) use ($fieldWidth, $labelWidth) {
             /* @var Field $field  */
             $field->setWidth($fieldWidth, $labelWidth);
         });
