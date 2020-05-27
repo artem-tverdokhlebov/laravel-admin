@@ -25,7 +25,7 @@ class Admin
      *
      * @var string
      */
-    const VERSION = '1.7.16';
+    const VERSION = '1.8.0';
 
     /**
      * @var Navbar
@@ -326,6 +326,7 @@ class Admin
                 $router->post('_handle_form_', 'HandleController@handleForm')->name('admin.handle-form');
                 $router->post('_handle_action_', 'HandleController@handleAction')->name('admin.handle-action');
                 $router->get('_handle_selectable_', 'HandleController@handleSelectable')->name('admin.handle-selectable');
+                $router->get('_handle_renderable_', 'HandleController@handleRenderable')->name('admin.handle-renderable');
             });
 
             $authController = config('admin.auth.controller', AuthController::class);

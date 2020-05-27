@@ -566,10 +566,13 @@ SCRIPT;
         }
 
         $reservedColumns = [
-            $this->form->model()->getKeyName(),
             $this->form->model()->getCreatedAtColumn(),
             $this->form->model()->getUpdatedAtColumn(),
         ];
+
+        if ($this->form->model()->incrementing) {
+            $reservedColumns[] = $this->form->model()->getKeyName();
+        }
 
         $this->form->getLayout()->removeReservedFields($reservedColumns);
 
@@ -635,7 +638,7 @@ SCRIPT;
 (function () {
     $('form.{$this->formClass}').submit(function (e) {
         e.preventDefault();
-        $(this).find('div.form-group.cascade.hide :input').attr('disabled', true);
+        $(this).find('div.cascade-group.hide :input').attr('disabled', true);
     });
 })();
 SCRIPT;
@@ -655,7 +658,7 @@ SCRIPT;
         $tabObj = $this->form->setTab();
 
         if (!$tabObj->isEmpty()) {
-            $this->addTabformScript();;
+            $this->addTabformScript();
         }
 
         $this->addCascadeScript();

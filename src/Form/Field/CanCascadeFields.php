@@ -20,13 +20,14 @@ trait CanCascadeFields
      * @param $operator
      * @param $value
      * @param $closure
+     *
      * @return $this
      */
     public function when($operator, $value, $closure = null)
     {
         if (func_num_args() == 2) {
-            $closure  = $value;
-            $value    = $operator;
+            $closure = $value;
+            $value = $operator;
             $operator = '=';
         }
 
@@ -55,24 +56,23 @@ trait CanCascadeFields
     }
 
     /**
-     * @param string $operator
-     * @param mixed $value
+     * @param string   $operator
+     * @param mixed    $value
      * @param \Closure $closure
      */
     protected function addDependents(string $operator, $value, \Closure $closure)
     {
         $this->conditions[] = compact('operator', 'value', 'closure');
 
-        $dependency = [
-            'field' => $this->column(),
-            'group' => count($this->conditions) - 1,
-        ];
-
-        $this->form->callWithDependency($dependency, $closure);
+        $this->form->cascadeGroup($closure, [
+            'column' => $this->column(),
+            'index'  => count($this->conditions) - 1,
+            'class'  => $this->getCascadeClass($value),
+        ]);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function fill($data)
     {
@@ -82,40 +82,8 @@ trait CanCascadeFields
     }
 
     /**
-     * Apply conditions to dependents fields.
-     *
-     * @return void
-     */
-    protected function applyCascadeConditions()
-    {
-        $this->form->fields()->filter(function (Form\Field $field) {
-            return $field->isDependsOn($this);
-        })->each(function (Form\Field $field) {
-            $group = Arr::get($field->getDependency(), 'group');
-            $field->setGroupClass(
-                $this->getDependentsElementClass($group)
-            );
-        });
-    }
-
-    /**
-     * @param int $group
-     * @return array
-     * @throws \Exception
-     */
-    protected function getDependentsElementClass(int $group)
-    {
-        $condition = $this->conditions[$group];
-
-        return [
-            'cascade',
-            $this->hitsCondition($condition) ? '' : 'hide',
-            $this->getCascadeClass($condition['value'])
-        ];
-    }
-
-    /**
      * @param mixed $value
+     *
      * @return string
      */
     protected function getCascadeClass($value)
@@ -128,35 +96,53 @@ trait CanCascadeFields
     }
 
     /**
-     * @param $operator
-     * @param $value
-     * @return bool
-     * @throws \Exception
+     * Apply conditions to dependents fields.
+     *
+     * @return void
      */
-    protected function hitsCondition($condition)
+    protected function applyCascadeConditions()
     {
+        $this->form->fields()
+            ->filter(function (Form\Field $field) {
+                return $field instanceof CascadeGroup
+                    && $field->dependsOn($this)
+                    && $this->hitsCondition($field);
+            })->each->visiable();
+    }
+
+    /**
+     * @param CascadeGroup $group
+     *
+     * @throws \Exception
+     *
+     * @return bool
+     */
+    protected function hitsCondition(CascadeGroup $group)
+    {
+        $condition = $this->conditions[$group->index()];
+
         extract($condition);
 
         $old = old($this->column(), $this->value());
 
         switch ($operator) {
-            case '=' :
+            case '=':
                 return $old == $value;
-            case '>' :
+            case '>':
                 return $old > $value;
-            case '<' :
+            case '<':
                 return $old < $value;
-            case '>=' :
+            case '>=':
                 return $old >= $value;
-            case '<=' :
+            case '<=':
                 return $old <= $value;
-            case '!=' :
+            case '!=':
                 return $old != $value;
-            case 'in' :
+            case 'in':
                 return in_array($old, $value);
-            case 'notIn' :
+            case 'notIn':
                 return !in_array($old, $value);
-            case 'has' :
+            case 'has':
                 return in_array($value, $old);
             default:
                 throw new \Exception("Operator [$operator] not support.");
@@ -174,17 +160,13 @@ trait CanCascadeFields
             return;
         }
 
-        $group = [];
-
-        foreach ($this->conditions as $item) {
-            $group[] = [
-                'class'    => $this->getCascadeClass($item['value']),
-                'operator' => $item['operator'],
-                'value'    => $item['value']
+        $cascadeGroups = collect($this->conditions)->map(function ($condition) {
+            return [
+                'class'    => $this->getCascadeClass($condition['value']),
+                'operator' => $condition['operator'],
+                'value'    => $condition['value'],
             ];
-        }
-
-        $cascadeGroups = json_encode($group);
+        })->toJson();
 
         $script = <<<SCRIPT
 (function () {
@@ -217,7 +199,7 @@ trait CanCascadeFields
         {$this->getFormFrontValue()}
 
         cascade_groups.forEach(function (event) {
-            var group = $('div.form-group.'+event.class);
+            var group = $('div.cascade-group.'+event.class);
             if( operator_table[event.operator](checked, event.value) ) {
                 group.removeClass('hide');
             } else {
@@ -244,7 +226,7 @@ SCRIPT;
             case BelongsTo::class:
             case BelongsToMany::class:
             case MultipleSelect::class:
-                return "var checked = $(this).val();";
+                return 'var checked = $(this).val();';
             case Checkbox::class:
             case CheckboxButton::class:
             case CheckboxCard::class:
