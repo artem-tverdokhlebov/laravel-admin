@@ -108,4 +108,9 @@ class Text extends Field
 
         return $this;
     }
+
+    function getRules()
+    {
+        return parent::getRules();
+    }
 }
