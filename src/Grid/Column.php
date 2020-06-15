@@ -31,7 +31,7 @@ use Illuminate\Support\Str;
  * @method $this orderable($column, $label = '')
  * @method $this table($titles = [])
  * @method $this expand($callback = null)
- * @method $this modal($callback = null)
+ * @method $this modal($title, $callback = null)
  * @method $this carousel(int $width = 300, int $height = 200, $server = '')
  * @method $this downloadable($server = '')
  * @method $this copyable()
@@ -752,6 +752,19 @@ class Column
             $bool = empty($map) ? boolval($value) : Arr::get($map, $value, $default);
 
             return $bool ? '<i class="fa fa-check text-green"></i>' : '<i class="fa fa-close text-red"></i>';
+        });
+    }
+
+    /**
+     * Display column as a default value if empty.
+     *
+     * @param string $default
+     * @return $this
+     */
+    public function default($default = '-')
+    {
+        return $this->display(function ($value) use ($default) {
+            return $value ?: $default;
         });
     }
 
