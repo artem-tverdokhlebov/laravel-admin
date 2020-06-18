@@ -139,8 +139,6 @@ class Column
         'suffix'        => Displayers\Suffix::class,
         'secret'        => Displayers\Secret::class,
         'limit'         => Displayers\Limit::class,
-        'belongsTo'     => Displayers\BelongsTo::class,
-        'belongsToMany' => Displayers\BelongsToMany::class,
     ];
 
     /**
@@ -589,6 +587,29 @@ class Column
     }
 
     /**
+     * @param string|Closure $input
+     * @param string $seperator
+     *
+     * @return $this
+     */
+    public function repeat($input, $seperator = '')
+    {
+        if (is_string($input)) {
+            $input = function () use ($input) {
+                return $input;
+            };
+        }
+
+        if ($input instanceof Closure) {
+            return $this->display(function ($value) use ($input, $seperator) {
+                return join($seperator, array_fill(0, (int) $value, $input->call($this, [$value])));
+            });
+        }
+
+        return $this;
+    }
+
+    /**
      * Render this column with the given view.
      *
      * @param string $view
@@ -842,6 +863,26 @@ class Column
         }
 
         return $this->displayUsing(Grid\Displayers\BelongsToMany::class, [$selectable]);
+    }
+
+    /**
+     * Upload file.
+     *
+     * @return $this
+     */
+    public function upload()
+    {
+        return $this->displayUsing(Grid\Displayers\Upload::class);
+    }
+
+    /**
+     * Upload many files.
+     *
+     * @return $this
+     */
+    public function uplaodMany()
+    {
+        return $this->displayUsing(Grid\Displayers\Upload::class, [true]);
     }
 
     /**
