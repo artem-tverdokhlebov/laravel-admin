@@ -342,10 +342,12 @@ trait HasAssets
 
             if ($child instanceof \DOMElement && $child->tagName == 'style') {
                 static::style($child->nodeValue);
+                continue;
             }
 
             if ($child instanceof \DOMElement && $child->tagName == 'script') {
                 static::script(';(function () {' . $child->nodeValue . '})();');
+                continue;
             }
 
             if ($child instanceof \DOMElement && $child->tagName == 'template') {
@@ -359,9 +361,7 @@ trait HasAssets
                 if ($html) {
                     static::html($html);
                 }
-            }
 
-            if ($child instanceof \DOMElement && in_array($child->tagName, ['template', 'style', 'script'])) {
                 continue;
             }
 
