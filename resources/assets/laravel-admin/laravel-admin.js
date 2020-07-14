@@ -39,11 +39,18 @@ $(document).on('submit', 'form[pjax-container]', function (event) {
 });
 
 $(document).on("pjax:popstate", function () {
-
     $(document).one("pjax:end", function (event) {
         $(event.target).find("script[data-exec-on-popstate]").each(function () {
             $.globalEval(this.text || this.textContent || this.innerHTML || '');
         });
+    });
+
+    $(document).find('select').each(function (i, select) {
+        var $select2 = $(select).data('select2');
+
+        if ($select2) {
+            $select2.close();
+        }
     });
 });
 
