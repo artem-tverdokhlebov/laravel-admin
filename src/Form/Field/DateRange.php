@@ -72,7 +72,7 @@ class DateRange extends Field
     {
         $this->disableMinMaxDate = true;
 
-        return $value;
+        return $this;
     }
 
     public function render()
@@ -107,5 +107,4 @@ EOT;
 
         return parent::render();
     }
-
 }
