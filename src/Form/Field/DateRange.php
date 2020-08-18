@@ -17,6 +17,8 @@ class DateRange extends Field
 
     protected $format = 'YYYY-MM-DD';
 
+    protected $disableMinMaxDate = false;
+
     /**
      * Column name.
      *
@@ -66,6 +68,13 @@ class DateRange extends Field
         return $value;
     }
 
+    public function disableMinMaxDate()
+    {
+        $this->disableMinMaxDate = true;
+
+        return $value;
+    }
+
     public function render()
     {
         $this->options['locale'] = config('app.locale');
@@ -75,17 +84,28 @@ class DateRange extends Field
 
         $class = $this->getElementClassSelector();
 
+        $scriptMinDate = ".minDate(e.date)";
+        $scriptMaxDate = ".maxDate(e.date)";
+
+        if ($this->disableMinMaxDate) {
+            $scriptMinDate = '';
+            $scriptMaxDate = '';
+        }
+
         $this->script = <<<EOT
             $('{$class['start']}').datetimepicker($startOptions);
             $('{$class['end']}').datetimepicker($endOptions);
             $("{$class['start']}").on("dp.change", function (e) {
-                $('{$class['end']}').data("DateTimePicker").minDate(e.date);
+                $('{$class['end']}').data("DateTimePicker")
+                {$scriptMinDate};
             });
             $("{$class['end']}").on("dp.change", function (e) {
-                $('{$class['start']}').data("DateTimePicker").maxDate(e.date);
+                $('{$class['start']}').data("DateTimePicker")
+                {$scriptMaxDate};
             });
 EOT;
 
         return parent::render();
     }
+
 }
