@@ -62,8 +62,8 @@ trait HasAssets
      */
     public static $baseCss = [
         'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css',
-        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css',
-        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/v4-shims.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/v4-shims.min.css',
         'vendor/laravel-admin/laravel-admin/laravel-admin.css',
         'https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css',
         'vendor/laravel-admin/sweetalert2/dist/sweetalert2.css',
