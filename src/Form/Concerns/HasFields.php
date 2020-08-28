@@ -58,6 +58,8 @@ use Illuminate\Support\Arr;
  * @method Field\HasMany        morphMany($relationName, $label = '', $callback)
  * @method Field\BelongsTo      belongsTo($column, $selectable, $label = '')
  * @method Field\BelongsToMany  belongsToMany($column, $selectable, $label = '')
+ * @method Field\Map            map($latitude, $longitude, $label = '')
+ * @method Field\Editor         editor($column, $label = '')
  */
 trait HasFields
 {
@@ -121,6 +123,8 @@ trait HasFields
         'morphMany'      => Field\HasMany::class,
         'belongsTo'      => Field\BelongsTo::class,
         'belongsToMany'  => Field\BelongsToMany::class,
+        'map'            => Field\Map::class,
+        'editor'         => Field\Editor::class,
     ];
 
     /**

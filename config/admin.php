@@ -257,10 +257,10 @@ return [
     | Admin map field provider
     |--------------------------------------------------------------------------
     |
-    | Supported: "tencent", "google", "yandex".
+    | Supported: "tencent", "google", "yandex", "openstreetmap".
     |
     */
-    'map_provider' => 'google',
+    'map_provider' => 'openstreetmap',
 
     /*
     |--------------------------------------------------------------------------

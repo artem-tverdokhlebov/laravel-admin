@@ -25,6 +25,8 @@ class Map extends Field
      */
     public static function getAssets()
     {
+        $css = '';
+
         switch (config('admin.map_provider')) {
             case 'tencent':
                 $js = '//map.qq.com/api/js?v=2.exp&key='.env('TENCENT_MAP_API_KEY');
@@ -35,11 +37,15 @@ class Map extends Field
             case 'yandex':
                 $js = '//api-maps.yandex.ru/2.1/?lang=ru_RU';
                 break;
+            case 'openstreetmap':
+                $js = '//cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.js';
+                $css = '//cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.css';
+                break;
             default:
                 $js = '//maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key='.env('GOOGLE_API_KEY');
         }
 
-        return compact('js');
+        return compact('js', 'css');
     }
 
     public function __construct($column, $arguments)
@@ -65,6 +71,9 @@ class Map extends Field
                 break;
             case 'yandex':
                 $this->useYandexMap();
+                break;
+            case 'openstreetmap':
+                $this->useOpenStreetMap();
                 break;
             default:
                 $this->useGoogleMap();
@@ -192,6 +201,37 @@ EOT;
             }
             
             initYandexMap('{$this->id['lat']}{$this->id['lng']}');
+        })();
+EOT;
+    }
+
+    public function useOpenStreetMap()
+    {
+        $this->script = <<<EOT
+        (function() {
+            function initOpenStreetMap(name) {
+                var lat = $('#{$this->id['lat']}');
+                var lng = $('#{$this->id['lng']}');
+                    
+                var map = L.map("map_"+name).setView([lat.val(), lng.val()], 18);
+                
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+                
+                var marker = L.marker([lat.val(), lng.val()]).addTo(map);
+                
+                map.on('click', function (e) {
+                    marker.remove(map);
+                    
+                    marker = L.marker(e.latlng).addTo(map);
+                    
+                    lat.val(e.latlng.lat);
+                    lng.val(e.latlng.lng);
+                });
+            }
+            
+            initOpenStreetMap('{$this->id['lat']}{$this->id['lng']}');
         })();
 EOT;
     }
