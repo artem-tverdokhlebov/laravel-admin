@@ -25,7 +25,7 @@ class Map extends Field
      */
     public static function getAssets()
     {
-        $css = '';
+        $css = [];
 
         switch (config('admin.map_provider')) {
             case 'tencent':
@@ -38,8 +38,12 @@ class Map extends Field
                 $js = '//api-maps.yandex.ru/2.1/?lang=ru_RU';
                 break;
             case 'openstreetmap':
-                $js = '//cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.js';
-                $css = '//cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.css';
+                $js[] = '//cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.js';
+                $js[] = '//cdnjs.cloudflare.com/ajax/libs/leaflet-geosearch/3.0.6/geosearch.umd.js';
+
+                $css[] = '//cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.css';
+                $css[] = '//cdnjs.cloudflare.com/ajax/libs/leaflet-geosearch/3.0.6/geosearch.min.css';
+
                 break;
             default:
                 $js = '//maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key='.env('GOOGLE_API_KEY');
@@ -215,6 +219,12 @@ EOT;
                     
                 var map = L.map("map_"+name).setView([lat.val(), lng.val()], 18);
                 
+                new GeoSearch.GeoSearchControl({
+                    provider: new GeoSearch.OpenStreetMapProvider(),
+                    style: 'bar',
+                    searchLabel: 'Поиск'
+                }).addTo(map);
+                
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(map);
@@ -228,6 +238,11 @@ EOT;
                     
                     lat.val(e.latlng.lat);
                     lng.val(e.latlng.lng);
+                });
+                
+                map.on('geosearch/showlocation', function(e) {
+                    lat.val(e.location.y);
+                    lng.val(e.location.x);
                 });
             }
             
