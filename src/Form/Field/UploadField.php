@@ -437,6 +437,8 @@ trait UploadField
             $path = Arr::get($path, $this->pathColumn);
         }
 
+        $path = $this->prepareUrl($path);
+
         if (URL::isValidUrl($path)) {
             return $path;
         }
@@ -449,6 +451,19 @@ trait UploadField
     }
 
     /**
+     * Prepare path for url
+     *
+     * @param $path
+     *
+     * @return string
+     */
+    protected function prepareUrl($path) {
+        $pos = strrpos($path, '/') + 1;
+
+        return substr($path, 0, $pos) . rawurlencode(substr($path, $pos));
+    }
+
+    /**
      * Generate a unique name for uploaded file.
      *
      * @param UploadedFile $file
@@ -457,7 +472,7 @@ trait UploadField
      */
     protected function generateUniqueName(UploadedFile $file)
     {
-        return md5(uniqid()).'.'.$file->getClientOriginalExtension();
+        return md5(uniqid('', true)).'.'.$file->getClientOriginalExtension();
     }
 
     /**
