@@ -241,7 +241,13 @@ EOT;
             return $this->renderFilePicker();
         }
 
-        $this->options(['overwriteInitial' => true, 'msgPlaceholder' => trans('admin.choose_file')]);
+        $this->options([
+            'overwriteInitial' => true,
+            'msgPlaceholder' => trans('admin.choose_file'),
+            'previewContentTemplates' => [
+                'video' => '<video class="kv-preview-data file-preview-video" controls {style}><source src="{data}"></video>'
+            ]
+        ]);
 
         $this->setupDefaultOptions();
 
