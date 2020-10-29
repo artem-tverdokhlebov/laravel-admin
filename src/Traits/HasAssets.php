@@ -66,7 +66,7 @@ trait HasAssets
         'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/v4-shims.min.css',
         'vendor/laravel-admin/laravel-admin/laravel-admin.css',
         'https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css',
-        'vendor/laravel-admin/sweetalert2/dist/sweetalert2.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.26.12/sweetalert2.min.css',
         'vendor/laravel-admin/nestable/nestable.css',
         'vendor/laravel-admin/toastr/build/toastr.min.css',
         'vendor/laravel-admin/bootstrap3-editable/css/bootstrap-editable.css',
@@ -86,7 +86,7 @@ trait HasAssets
         'vendor/laravel-admin/nestable/jquery.nestable.js',
         'vendor/laravel-admin/toastr/build/toastr.min.js',
         'vendor/laravel-admin/bootstrap3-editable/js/bootstrap-editable.min.js',
-        'vendor/laravel-admin/sweetalert2/dist/sweetalert2.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.26.12/sweetalert2.min.js',
         'vendor/laravel-admin/laravel-admin/laravel-admin.js',
     ];
 
