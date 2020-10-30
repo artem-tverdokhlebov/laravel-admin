@@ -35,9 +35,11 @@ class BelongsTo extends Select
 
     // remove row
     grid.on('click', '.grid-row-remove', function () {
+        var _this = $(this);
+        
         var callback = function () {
             selected = null;
-            $(this).parents('tr').remove();
+            _this.parents('tr').remove();
             $("{$this->getElementClassSelector()}").val(null);
     
             var empty = $('.belongsto-{$this->column()}').find('template.empty').html();

@@ -41,8 +41,10 @@ class BelongsToMany extends MultipleSelect
 
     // remove row
     grid.on('click', '.grid-row-remove', function () {
+        var _this = $(this);
+        
         var callback = function () {
-            val = $(this).data('key').toString();
+            val = _this.data('key').toString();
     
             var index = selected.indexOf(val);
             if (index !== -1) {
