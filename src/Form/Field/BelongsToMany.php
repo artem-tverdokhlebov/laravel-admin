@@ -10,6 +10,12 @@ class BelongsToMany extends MultipleSelect
 
     protected function addScript()
     {
+        $trans = [
+            'delete_confirm' => trans('admin.delete_confirm'),
+            'confirm'        => trans('admin.confirm'),
+            'cancel'         => trans('admin.cancel'),
+        ];
+
         $script = <<<SCRIPT
 ;(function () {
 
@@ -18,6 +24,8 @@ class BelongsToMany extends MultipleSelect
     var table = grid.find('.grid-table');
     var selected = $("{$this->getElementClassSelector()}").val() || [];
     var rows = {};
+    
+    var askBeforeDelete = Boolean({$this->askBeforeDelete});
 
     table.find('tbody').children().each(function (index, tr) {
         if ($(tr).find('.grid-row-remove').length > 0) {
@@ -33,20 +41,39 @@ class BelongsToMany extends MultipleSelect
 
     // remove row
     grid.on('click', '.grid-row-remove', function () {
-        val = $(this).data('key').toString();
-
-        var index = selected.indexOf(val);
-        if (index !== -1) {
-           selected.splice(index, 1);
-           delete rows[val];
-        }
-
-        $(this).parents('tr').remove();
-        $("{$this->getElementClassSelector()}").val(selected);
-
-        if (selected.length == 0) {
-            var empty = $('.belongstomany-{$this->column()}').find('template.empty').html();
-            table.find('tbody').append(empty);
+        var callback = function () {
+            val = $(this).data('key').toString();
+    
+            var index = selected.indexOf(val);
+            if (index !== -1) {
+               selected.splice(index, 1);
+               delete rows[val];
+            }
+    
+            $(this).parents('tr').remove();
+            $("{$this->getElementClassSelector()}").val(selected);
+    
+            if (selected.length == 0) {
+                var empty = $('.belongstomany-{$this->column()}').find('template.empty').html();
+                table.find('tbody').append(empty);
+            }
+        };
+        
+        if (askBeforeDelete) {
+            swal({
+                title: "{$trans['delete_confirm']}",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "{$trans['confirm']}",
+                cancelButtonText: "{$trans['cancel']}"
+            }).then(function(result) {
+                if (result.value) {
+                    callback();
+                }
+            });
+        } else {
+            callback();
         }
     });
 

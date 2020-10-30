@@ -8,14 +8,6 @@ class BelongsTo extends Select
 {
     use BelongsToRelation;
 
-    private $askBeforeDelete = false;
-
-    public function askBeforeDelete() {
-        $this->askBeforeDelete = true;
-
-        return $this;
-    }
-
     protected function addScript()
     {
         $trans = [
@@ -63,11 +55,11 @@ class BelongsTo extends Select
                 cancelButtonText: "{$trans['cancel']}"
             }).then(function(result) {
                 if (result.value) {
-                    callback()
+                    callback();
                 }
             });
         } else {
-            callback()
+            callback();
         }
     });
 

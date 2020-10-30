@@ -17,6 +17,14 @@ trait BelongsToRelation
      */
     protected $selectable;
 
+    protected $askBeforeDelete = false;
+
+    public function askBeforeDelete() {
+        $this->askBeforeDelete = true;
+
+        return $this;
+    }
+
     /**
      * BelongsToRelation constructor.
      *
