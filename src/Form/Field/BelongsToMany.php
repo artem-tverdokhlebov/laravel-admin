@@ -52,7 +52,7 @@ class BelongsToMany extends MultipleSelect
                delete rows[val];
             }
     
-            $(this).parents('tr').remove();
+            _this.parents('tr').remove();
             $("{$this->getElementClassSelector()}").val(selected);
     
             if (selected.length == 0) {
