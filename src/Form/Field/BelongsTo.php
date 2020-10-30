@@ -8,8 +8,22 @@ class BelongsTo extends Select
 {
     use BelongsToRelation;
 
+    private $askBeforeDelete = false;
+
+    public function askBeforeDelete() {
+        $this->askBeforeDelete = true;
+
+        return $this;
+    }
+
     protected function addScript()
     {
+        $trans = [
+            'delete_confirm' => trans('admin.delete_confirm'),
+            'confirm'        => trans('admin.confirm'),
+            'cancel'         => trans('admin.cancel'),
+        ];
+
         $script = <<<SCRIPT
 ;(function () {
 
@@ -19,6 +33,8 @@ class BelongsTo extends Select
     var selected = $("{$this->getElementClassSelector()}").val();
     var row = null;
 
+    var askBeforeDelete = Boolean({$this->askBeforeDelete});
+
     // open modal
     grid.find('.select-relation').click(function (e) {
         $('#{$this->modalID}').modal('show');
@@ -27,13 +43,32 @@ class BelongsTo extends Select
 
     // remove row
     grid.on('click', '.grid-row-remove', function () {
-        selected = null;
-        $(this).parents('tr').remove();
-        $("{$this->getElementClassSelector()}").val(null);
-
-        var empty = $('.belongsto-{$this->column()}').find('template.empty').html();
-
-        table.find('tbody').append(empty);
+        var callback = function () {
+            selected = null;
+            $(this).parents('tr').remove();
+            $("{$this->getElementClassSelector()}").val(null);
+    
+            var empty = $('.belongsto-{$this->column()}').find('template.empty').html();
+    
+            table.find('tbody').append(empty);
+        };
+        
+        if (askBeforeDelete) {
+            swal({
+                title: "{$trans['delete_confirm']}",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "{$trans['confirm']}",
+                cancelButtonText: "{$trans['cancel']}"
+            }).then(function(result) {
+                if (result.value) {
+                    callback()
+                }
+            });
+        } else {
+            callback()
+        }
     });
 
     var load = function (url) {
