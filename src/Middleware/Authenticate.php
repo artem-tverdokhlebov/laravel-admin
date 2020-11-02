@@ -37,23 +37,8 @@ class Authenticate
      */
     protected function shouldPassThrough($request)
     {
-        $excepts = array_merge(config('admin.auth.excepts', []), [
-            'auth/login',
-            'auth/logout',
-            '_handle_action_',
-            '_handle_form_',
-            '_handle_selectable_',
-            '_handle_renderable_',
-        ]);
+        $except = trim(admin_base_path('auth/login'), '/');
 
-        return collect($excepts)
-            ->map('admin_base_path')
-            ->contains(function ($except) use ($request) {
-                if ($except !== '/') {
-                    $except = trim($except, '/');
-                }
-
-                return $request->is($except);
-            });
+        return $request->is($except);
     }
 }
