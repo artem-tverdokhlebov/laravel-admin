@@ -18,7 +18,9 @@
         <div class="belongsto-{{ $class }}">
             {!! $grid->render() !!}
             <template class="empty">
-                @include('admin::grid.empty-grid')
+                @if($grid->showDefineEmptyPage())
+                    @include('admin::grid.empty-grid')
+                @endif
             </template>
         </div>
 
