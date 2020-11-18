@@ -591,12 +591,12 @@ class Form implements Renderable
             $this->updateRelation($this->relations);
         });
 
-        if ($response = $this->ajaxResponse(trans('admin.update_succeeded'))) {
-            return $response;
-        }
-
         if (($result = $this->callSaved()) instanceof Response) {
             return $result;
+        }
+
+        if ($response = $this->ajaxResponse(trans('admin.update_succeeded'))) {
+            return $response;
         }
 
         return $this->redirectAfterUpdate($id);
