@@ -656,6 +656,7 @@ SCRIPT;
         $this->removeReservedFields();
 
         $tabObj = $this->form->setTab();
+        $boxObj = $this->form->setBox();
 
         if (!$tabObj->isEmpty()) {
             $this->addTabformScript();
@@ -666,6 +667,7 @@ SCRIPT;
         $data = [
             'form'   => $this,
             'tabObj' => $tabObj,
+            'boxObj' => $boxObj,
             'width'  => $this->width,
             'layout' => $this->form->getLayout(),
         ];

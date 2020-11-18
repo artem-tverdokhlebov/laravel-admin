@@ -36,6 +36,10 @@ class Box extends Widget implements Renderable
      */
     protected $script;
 
+    protected $collapse = false;
+
+    private const COLLAPSABLE_TOOL = '<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>';
+
     /**
      * Box constructor.
      *
@@ -116,8 +120,22 @@ class Box extends Widget implements Renderable
      */
     public function collapsable()
     {
-        $this->tools[] =
-            '<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>';
+        $this->tools[] = self::COLLAPSABLE_TOOL;
+
+        return $this;
+    }
+
+    public function collapse() {
+        $this->collapse = true;
+
+        $this->class .= ' collapsed-box';
+
+        foreach ($this->tools as $key => $tool) {
+            if ($tool == self::COLLAPSABLE_TOOL) {
+                $this->tools[$key] = str_replace('fa-minus', 'fa-plus', self::COLLAPSABLE_TOOL);
+                break;
+            }
+        }
 
         return $this;
     }
@@ -201,6 +219,7 @@ SCRIPT;
             'tools'      => $this->tools,
             'attributes' => $this->formatAttributes(),
             'script'     => $this->script,
+            'collapse'   => $this->collapse
         ];
     }
 

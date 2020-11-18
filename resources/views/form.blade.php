@@ -11,21 +11,43 @@
     {!! $form->open() !!}
 
     <div class="box-body">
-
         @if(!$tabObj->isEmpty())
             @include('admin::form.tab', compact('tabObj'))
         @else
             <div class="fields-group">
-
                 @if($form->hasRows())
                     @foreach($form->getRows() as $row)
                         {!! $row->render() !!}
                     @endforeach
                 @else
+                    @php $i = 0; @endphp
                     @foreach($layout->columns() as $column)
                         <div class="col-md-{{ $column->width() }}">
                             @foreach($column->fields() as $field)
+                                @php
+                                    foreach ($boxObj->getOffsets() as $item) {
+                                        if ($item['start'] == $i) {
+                                            ob_start();
+                                            break;
+                                        }
+                                    }
+                                @endphp
+
                                 {!! $field->render() !!}
+
+                                @php
+                                    $i++;
+
+                                    foreach ($boxObj->getOffsets() as $item) {
+                                       if ($item['end'] == $i) {
+                                           $content = ob_get_clean();
+
+                                           $item['box']->content($content);
+                                           echo $item['box']->render();
+                                           break;
+                                       }
+                                    }
+                                @endphp
                             @endforeach
                         </div>
                     @endforeach

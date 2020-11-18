@@ -4,6 +4,7 @@ namespace Encore\Admin;
 
 use Closure;
 use Encore\Admin\Exception\Handler;
+use Encore\Admin\Form\Box;
 use Encore\Admin\Form\Builder;
 use Encore\Admin\Form\Concerns\HandleCascadeFields;
 use Encore\Admin\Form\Concerns\HasFields;
@@ -103,6 +104,8 @@ class Form implements Renderable
      */
     protected $tab = null;
 
+    protected $box = null;
+
     /**
      * Field rows in form.
      *
@@ -198,6 +201,22 @@ class Form implements Renderable
     }
 
     /**
+     * Use box to split form.
+     *
+     * @param string  $title
+     * @param Closure $content
+     * @param bool    $expand
+     *
+     * @return \Encore\Admin\Widgets\Box
+     */
+    public function box($title, Closure $content, bool $collapse = false): \Encore\Admin\Widgets\Box
+    {
+        $box = $this->setBox()->append($title, $content, $collapse);
+
+        return $box;
+    }
+
+    /**
      * Use tab to split form.
      *
      * @param string  $title
@@ -235,6 +254,30 @@ class Form implements Renderable
         }
 
         return $this->tab;
+    }
+
+    /**
+     * Set Tab instance.
+     *
+     * @return Tab
+     */
+    public function setBox(): Box
+    {
+        if ($this->box === null) {
+            $this->box = new Box($this);
+        }
+
+        return $this->box;
+    }
+
+    /**
+     * Get Tab instance.
+     *
+     * @return Tab
+     */
+    public function getBox()
+    {
+        return $this->box;
     }
 
     /**

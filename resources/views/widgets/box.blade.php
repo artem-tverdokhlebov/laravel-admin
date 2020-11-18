@@ -9,11 +9,11 @@
             </div><!-- /.box-tools -->
         </div><!-- /.box-header -->
     @endif
-    <div class="box-body" style="display: block;">
+    <div class="box-body" @if($collapse)style="display: none;"@endif>
         {!! $content !!}
     </div><!-- /.box-body -->
     @if($footer)
-        <div class="box-footer">
+        <div class="box-footer" @if($collapse)style="display: none;"@endif>
             {!! $footer !!}
         </div><!-- /.box-footer-->
     @endif
