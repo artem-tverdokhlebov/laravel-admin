@@ -13,7 +13,7 @@
         </select>
         <input type="hidden" name="{{$name}}[]" />
 
-        <div class="belongstomany-{{ $class }}">
+        <div class="belongstomany-{{ $class }}-{{ $uniqueId }}">
             {!! $grid->render() !!}
             <template class="empty">
                 @if($grid->showDefineEmptyPage())

@@ -19,12 +19,12 @@ class BelongsToMany extends MultipleSelect
         $script = <<<SCRIPT
 ;(function () {
 
-    var grid = $('.belongstomany-{$this->column()}');
+    var grid = $('.belongstomany-{$this->column()}-{$this->uniqueId}');
     var modal = $('#{$this->modalID}');
     var table = grid.find('.grid-table');
     var selected = $("{$this->getElementClassSelector()}").val() || [];
     var rows = {};
-    
+
     var askBeforeDelete = Boolean({$this->askBeforeDelete});
 
     table.find('tbody').children().each(function (index, tr) {
@@ -42,25 +42,25 @@ class BelongsToMany extends MultipleSelect
     // remove row
     grid.on('click', '.grid-row-remove', function () {
         var _this = $(this);
-        
+
         var callback = function () {
             val = _this.data('key').toString();
-    
+
             var index = selected.indexOf(val);
             if (index !== -1) {
                selected.splice(index, 1);
                delete rows[val];
             }
-    
+
             _this.parents('tr').remove();
             $("{$this->getElementClassSelector()}").val(selected);
-    
+
             if (selected.length == 0) {
                 var empty = $('.belongstomany-{$this->column()}').find('template.empty').html();
                 table.find('tbody').append(empty);
             }
         };
-        
+
         if (askBeforeDelete) {
             swal({
                 title: "{$trans['delete_confirm']}",

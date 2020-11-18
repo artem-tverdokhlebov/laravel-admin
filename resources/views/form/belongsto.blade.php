@@ -15,7 +15,7 @@
             @endforeach
         </select>
 
-        <div class="belongsto-{{ $class }}">
+        <div class="belongsto-{{ $class }}-{{ $uniqueId }}">
             {!! $grid->render() !!}
             <template class="empty">
                 @if($grid->showDefineEmptyPage())

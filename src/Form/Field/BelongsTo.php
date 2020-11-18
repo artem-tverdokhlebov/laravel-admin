@@ -19,7 +19,7 @@ class BelongsTo extends Select
         $script = <<<SCRIPT
 ;(function () {
 
-    var grid = $('.belongsto-{$this->column()}');
+    var grid = $('.belongsto-{$this->column()}-{$this->uniqueId}');
     var modal = $('#{$this->modalID}');
     var table = grid.find('.grid-table');
     var selected = $("{$this->getElementClassSelector()}").val();
@@ -36,17 +36,17 @@ class BelongsTo extends Select
     // remove row
     grid.on('click', '.grid-row-remove', function () {
         var _this = $(this);
-        
+
         var callback = function () {
             selected = null;
             _this.parents('tr').remove();
             $("{$this->getElementClassSelector()}").val(null);
-    
+
             var empty = $('.belongsto-{$this->column()}').find('template.empty').html();
-    
+
             table.find('tbody').append(empty);
         };
-        
+
         if (askBeforeDelete) {
             swal({
                 title: "{$trans['delete_confirm']}",

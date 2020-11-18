@@ -12,6 +12,8 @@ trait BelongsToRelation
      */
     protected $modalID;
 
+    protected $uniqueId;
+
     /**
      * @var string
      */
@@ -166,13 +168,15 @@ STYLE;
      */
     public function render()
     {
-        $this->modalID = sprintf('modal-selector-%s', $this->getElementClassString());
+        $this->uniqueId = uniqid();
+        $this->modalID = sprintf('modal-selector-%s-%s', $this->getElementClassString(), $this->uniqueId);
 
         $this->addScript()->addHtml()->addStyle();
 
         $this->addVariables([
             'grid'    => $this->makeGrid(),
             'options' => $this->getOptions(),
+            'uniqueId' => $this->uniqueId
         ]);
 
         $this->addCascadeScript();
