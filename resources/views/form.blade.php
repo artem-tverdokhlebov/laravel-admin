@@ -26,9 +26,11 @@
                             @foreach($column->fields() as $field)
                                 @php
                                     foreach ($boxObj->getOffsets() as $item) {
-                                        if ($item['start'] == $i) {
+                                        if ($item['start'] == $i && $item['end'] != $i) {
                                             ob_start();
-                                            break;
+                                        } else if ($item['start'] == $i && $item['end'] == $i) {
+                                            $item['box']->content('');
+                                            echo $item['box']->render();
                                         }
                                     }
                                 @endphp
@@ -39,13 +41,12 @@
                                     $i++;
 
                                     foreach ($boxObj->getOffsets() as $item) {
-                                       if ($item['end'] == $i) {
-                                           $content = ob_get_clean();
+                                        if ($item['end'] == $i && $item['start'] != $item['end']) {
+                                            $content = ob_get_clean();
 
-                                           $item['box']->content($content);
-                                           echo $item['box']->render();
-                                           break;
-                                       }
+                                            $item['box']->content($content);
+                                            echo $item['box']->render();
+                                        }
                                     }
                                 @endphp
                             @endforeach
