@@ -43,6 +43,8 @@ abstract class Selectable
      */
     protected $imageLayout = false;
 
+    protected $readOnly = false;
+
     /**
      * Selectable constructor.
      *
@@ -55,6 +57,12 @@ abstract class Selectable
         $this->multiple = $multiple;
 
         $this->initGrid();
+    }
+
+    public function readOnly() {
+        $this->readOnly = true;
+
+        return $this;
     }
 
     /**
@@ -108,7 +116,9 @@ abstract class Selectable
     {
         $this->make();
 
-        $this->appendRemoveBtn(false);
+        if (!$this->readOnly) {
+            $this->appendRemoveBtn(false);
+        }
 
         $this->model()->whereKey(Arr::wrap($values));
 
@@ -118,9 +128,11 @@ abstract class Selectable
             $this->disablePagination();
         }
 
-        $this->tools(function (Tools $tools) {
-            $tools->append(new Grid\Selectable\BrowserBtn());
-        });
+        if (!$this->readOnly) {
+            $this->tools(function (Tools $tools) {
+                $tools->append(new Grid\Selectable\BrowserBtn());
+            });
+        }
 
         return $this->grid;
     }

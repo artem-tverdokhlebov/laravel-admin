@@ -4,6 +4,7 @@ namespace Encore\Admin\Form\Field;
 
 use Encore\Admin\Admin;
 use Encore\Admin\Grid\Selectable;
+use Encore\Admin\Grid\Tools;
 
 trait BelongsToRelation
 {
@@ -20,9 +21,16 @@ trait BelongsToRelation
     protected $selectable;
 
     protected $askBeforeDelete = false;
+    protected $readOnly = false;
 
     public function askBeforeDelete() {
         $this->askBeforeDelete = true;
+
+        return $this;
+    }
+
+    public function readOnly() {
+        $this->readOnly = true;
 
         return $this;
     }
@@ -159,6 +167,10 @@ STYLE;
     {
         /** @var Selectable $selectable */
         $selectable = new $this->selectable();
+
+        if ($this->readOnly) {
+            $selectable->readOnly();
+        }
 
         return $selectable->renderFormGrid($this->value());
     }
