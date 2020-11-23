@@ -4,7 +4,6 @@ namespace Encore\Admin\Form\Field;
 
 use Encore\Admin\Admin;
 use Encore\Admin\Grid\Selectable;
-use Encore\Admin\Grid\Tools;
 
 trait BelongsToRelation
 {
@@ -13,6 +12,9 @@ trait BelongsToRelation
      */
     protected $modalID;
 
+    /**
+     * @var string
+     */
     protected $uniqueId;
 
     /**
@@ -20,8 +22,15 @@ trait BelongsToRelation
      */
     protected $selectable;
 
+    /**
+     * @var bool
+     */
     protected $askBeforeDelete = false;
-    protected $readOnly = false;
+
+    /**
+     * @var bool
+     */
+    protected $readonly = false;
 
     public function askBeforeDelete() {
         $this->askBeforeDelete = true;
@@ -29,8 +38,8 @@ trait BelongsToRelation
         return $this;
     }
 
-    public function readOnly() {
-        $this->readOnly = true;
+    public function readonly() {
+        $this->readonly = true;
 
         return $this;
     }

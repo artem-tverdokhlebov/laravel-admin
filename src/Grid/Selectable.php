@@ -43,7 +43,10 @@ abstract class Selectable
      */
     protected $imageLayout = false;
 
-    protected $readOnly = false;
+    /**
+     * @var bool
+     */
+    protected $readonly = false;
 
     /**
      * Selectable constructor.
@@ -59,12 +62,6 @@ abstract class Selectable
         $this->initGrid();
     }
 
-    public function readOnly() {
-        $this->readOnly = true;
-
-        return $this;
-    }
-
     /**
      * @return Grid
      */
@@ -73,6 +70,12 @@ abstract class Selectable
     protected function imageLayout()
     {
         $this->imageLayout = true;
+    }
+
+    public function readonly() {
+        $this->readonly = true;
+
+        return $this;
     }
 
     /**
