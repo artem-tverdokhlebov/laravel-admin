@@ -52,6 +52,10 @@ $(document).on("pjax:popstate", function () {
             $select2.close();
         }
     });
+
+    $(document).find('[data-toggle="popover"]').each(function (i, select) {
+        $(select).popover('hide');
+    });
 });
 
 $(document).on('pjax:send', function (xhr) {
@@ -62,6 +66,10 @@ $(document).on('pjax:send', function (xhr) {
         }
     }
     NProgress.start();
+
+    $(document).find('[data-toggle="popover"]').each(function (i, select) {
+        $(select).popover('hide');
+    });
 });
 
 $(document).on('pjax:complete', function (xhr) {
@@ -73,10 +81,18 @@ $(document).on('pjax:complete', function (xhr) {
     }
     NProgress.done();
     $.admin.grid.selects = {};
+
+    $('[data-toggle="popover"]').popover();
 });
 
 $(document).click(function () {
     $('.sidebar-form .dropdown-menu').hide();
+});
+
+$(document).on('click', '[data-toggle="tab"]', function () {
+    $(document).find('[data-toggle="popover"]').each(function (i, select) {
+        $(select).popover('hide');
+    });
 });
 
 $(function () {

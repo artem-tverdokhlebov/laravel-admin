@@ -177,8 +177,8 @@ STYLE;
         /** @var Selectable $selectable */
         $selectable = new $this->selectable();
 
-        if ($this->readOnly) {
-            $selectable->readOnly();
+        if ($this->readonly) {
+            $selectable->readonly();
         }
 
         return $selectable->renderFormGrid($this->value());

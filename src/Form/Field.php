@@ -22,6 +22,9 @@ class Field implements Renderable
     const FILE_DELETE_FLAG = '_file_del_';
     const FILE_SORT_FLAG = '_file_sort_';
 
+    const HELP_UNDER_FIELD_POSITION = 0;
+    const HELP_NEAR_LABEL_POSITION = 1;
+
     /**
      * Element id.
      *
@@ -187,6 +190,13 @@ class Field implements Renderable
      * @var array
      */
     protected $help = [];
+
+    /**
+     * Popover help block.
+     *
+     * @var array
+     */
+    protected $popoverHelp = [];
 
     /**
      * Key for errors.
@@ -873,7 +883,40 @@ class Field implements Renderable
      */
     public function help($text = '', $icon = 'fa-info-circle'): self
     {
-        $this->help = compact('text', 'icon');
+        $position = self::HELP_UNDER_FIELD_POSITION;
+        $this->help = compact('text', 'icon', 'position');
+
+        return $this;
+    }
+
+    /**
+     * Set popover help block for current field.
+     *
+     * @param string $title
+     * @param string $text
+     * @param string $icon
+     *
+     * @return $this
+     */
+    public function popoverHelp($title = '', $text = '', $icon = 'fa-info-circle'): self
+    {
+        $popover = true;
+        $position = self::HELP_UNDER_FIELD_POSITION;
+
+        $this->help = compact('title', 'text', 'icon', 'popover', 'position');
+
+        return $this;
+    }
+
+    /**
+     * Set help block position.
+     *
+     * @param int $mode
+     *
+     * @return $this
+     */
+    public function helpPosition($mode = self::HELP_UNDER_FIELD_POSITION) {
+        $this->help['position'] = $mode;
 
         return $this;
     }

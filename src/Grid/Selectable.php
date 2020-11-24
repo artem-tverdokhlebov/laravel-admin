@@ -119,7 +119,7 @@ abstract class Selectable
     {
         $this->make();
 
-        if (!$this->readOnly) {
+        if (!$this->readonly) {
             $this->appendRemoveBtn(false);
         }
 
@@ -131,7 +131,7 @@ abstract class Selectable
             $this->disablePagination();
         }
 
-        if (!$this->readOnly) {
+        if (!$this->readonly) {
             $this->tools(function (Tools $tools) {
                 $tools->append(new Grid\Selectable\BrowserBtn());
             });
