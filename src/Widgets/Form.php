@@ -62,6 +62,8 @@ use Illuminate\Validation\Validator;
  * @method Field\Timezone       timezone($column, $label = '')
  * @method Field\KeyValue       keyValue($column, $label = '')
  * @method Field\ListField      list($column, $label = '')
+ * @method Field\BelongsTo      belongsTo($column, $selectable, $label = '')
+ * @method Field\BelongsToMany  belongsToMany($column, $selectable, $label = '')
  * @method mixed                handle(Request $request)
  */
 class Form implements Renderable
