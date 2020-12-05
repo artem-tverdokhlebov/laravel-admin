@@ -120,6 +120,7 @@ trait UploadField
             'showRemove'           => false,
             'showUpload'           => false,
             'showCancel'           => false,
+            'showClose'            => false,
             'dropZoneEnabled'      => false,
             'deleteExtraData'      => [
                 $this->formatName($this->column) => static::FILE_DELETE_FLAG,
