@@ -40,8 +40,6 @@ class File extends Field
      */
     public function __construct($column, $arguments = [])
     {
-        self::$js[] = 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.3/js/locales/'. Lang::locale() . '.min.js';
-
         $this->initStorage();
 
         parent::__construct($column, $arguments);
