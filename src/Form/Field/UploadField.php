@@ -57,6 +57,9 @@ trait UploadField
      */
     protected $downloadable = true;
 
+    protected $minFilesCount = null;
+    protected $maxFilesCount = null;
+
     /**
      * Configuration for setting up file actions for newly selected file thumbnails in the preview window.
      *
@@ -122,6 +125,10 @@ trait UploadField
             'showCancel'           => false,
             'showClose'            => false,
             'dropZoneEnabled'      => false,
+            'minFileCount'         => $this->minFilesCount,
+            'maxFileCount'         => $this->maxFilesCount,
+            'language'             => Lang::locale(),
+            'validateInitialCount' => true,
             'deleteExtraData'      => [
                 $this->formatName($this->column) => static::FILE_DELETE_FLAG,
                 static::FILE_DELETE_FLAG         => '',
@@ -193,6 +200,22 @@ trait UploadField
     public function downloadable($downloadable = true)
     {
         $this->downloadable = $downloadable;
+
+        return $this;
+    }
+
+    public function minFilesCount($count) {
+        if ($count >= 0) {
+            $this->minFilesCount = $count;
+        }
+
+        return $this;
+    }
+
+    public function maxFilesCount($count) {
+        if (is_int($count)) {
+            $this->maxFilesCount = $count;
+        }
 
         return $this;
     }

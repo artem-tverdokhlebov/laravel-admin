@@ -30,7 +30,7 @@ class MultipleFile extends Field
         'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.3/js/fileinput.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/js/plugins/piexif.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/js/plugins/purify.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.3/js/plugins/sortable.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.3/js/plugins/sortable.min.js'
     ];
 
     /**
@@ -41,6 +41,8 @@ class MultipleFile extends Field
      */
     public function __construct($column, $arguments = [])
     {
+        self::$js[] = 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.3/js/locales/'. Lang::locale() . '.min.js';
+
         $this->initStorage();
 
         parent::__construct($column, $arguments);
