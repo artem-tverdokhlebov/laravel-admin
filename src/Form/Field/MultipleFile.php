@@ -28,8 +28,8 @@ class MultipleFile extends Field
     protected static $js = [
         'https://cdnjs.cloudflare.com/ajax/libs/javascript-canvas-to-blob/3.17.0/js/canvas-to-blob.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.3/js/fileinput.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/js/plugins/piexif.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/js/plugins/purify.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.3/js/plugins/piexif.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.3/js/plugins/purify.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.3/js/plugins/sortable.min.js'
     ];
 
