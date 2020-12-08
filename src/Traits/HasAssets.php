@@ -40,6 +40,11 @@ trait HasAssets
     public static $headerJs = [];
 
     /**
+     * @var array
+     */
+    public static $footerJs = [];
+
+    /**
      * @var string
      */
     public static $manifest = 'vendor/laravel-admin/minify-manifest.json';
@@ -169,6 +174,22 @@ trait HasAssets
         $js = array_filter(array_unique($js));
 
         return view('admin::partials.js', compact('js'));
+    }
+
+    /**
+     * Add js or get all js.
+     *
+     * @param null $js
+     *
+     * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public static function footerJs($js = null)
+    {
+        if (!is_null($js)) {
+            return self::$footerJs = array_merge(self::$footerJs, (array) $js);
+        }
+
+        return view('admin::partials.js', ['js' => array_unique(static::$footerJs)]);
     }
 
     /**

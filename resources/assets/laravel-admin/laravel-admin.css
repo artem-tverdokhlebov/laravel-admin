@@ -87,3 +87,11 @@ a.editable-empty {
 .help-block {
     font-weight: normal;
 }
+
+.user-panel .image {
+    min-height: 45px;
+}
+
+.user-panel .image img {
+    border-radius: 8px;
+}

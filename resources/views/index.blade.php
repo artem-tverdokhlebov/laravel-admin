@@ -62,5 +62,7 @@
 <!-- REQUIRED JS SCRIPTS -->
 {!! Admin::js() !!}
 
+{!! Admin::footerJs() !!}
+
 </body>
 </html>
