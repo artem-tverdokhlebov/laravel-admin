@@ -154,6 +154,7 @@ class HandleController extends Controller
     {
         $class = $request->get('selectable');
         $args = $request->get('args', []);
+        $exclude = $request->get('exclude', []);
 
         $class = str_replace('_', '\\', $class);
 
@@ -161,6 +162,10 @@ class HandleController extends Controller
             /** @var \Encore\Admin\Grid\Selectable $selectable */
             $selectable = new $class(...array_values($args));
 
+            if (!empty($exclude)) {
+                $selectable->model()->whereNotIn('id', $exclude);
+            }
+            
             return $selectable->render();
         }
 

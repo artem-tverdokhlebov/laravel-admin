@@ -28,12 +28,23 @@ trait BelongsToRelation
     protected $askBeforeDelete = false;
 
     /**
+     * @var array
+     */
+    protected $exclude = [];
+
+    /**
      * @var bool
      */
     protected $readonly = false;
 
     public function askBeforeDelete() {
         $this->askBeforeDelete = true;
+
+        return $this;
+    }
+
+    public function exclude($value = []) {
+        $this->exclude = is_array($value) ? $value : func_get_args();
 
         return $this;
     }
@@ -89,7 +100,9 @@ trait BelongsToRelation
         $selectable = str_replace('\\', '_', $this->selectable);
         $args = [$multiple];
 
-        return route('admin.handle-selectable', compact('selectable', 'args'));
+        $exclude = $this->exclude;
+
+        return route('admin.handle-selectable', compact('selectable', 'args', 'exclude'));
     }
 
     /**
