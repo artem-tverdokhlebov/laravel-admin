@@ -31,11 +31,11 @@ class Box
     }
 
     /**
-     * Append a tab section.
+     * Append a box section.
      *
-     * @param string   $title
+     * @param string $title
      * @param \Closure $content
-     * @param bool     $active
+     * @param bool $collapse
      *
      * @return \Encore\Admin\Widgets\Box
      */
@@ -73,7 +73,7 @@ class Box
 
         $box = new \Encore\Admin\Widgets\Box($title);
 
-        $box->style(['info']);
+        $box->style('info');
         $box->collapsable();
 
         if ($collapse) {
@@ -90,7 +90,7 @@ class Box
     }
 
     /**
-     * Get all tabs.
+     * Get offsets.
      *
      * @return Collection
      */

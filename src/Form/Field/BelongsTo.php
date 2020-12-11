@@ -83,7 +83,6 @@ class BelongsTo extends Select
     };
 
     var update = function (callback) {
-
         $("{$this->getElementClassSelector()}")
             .select2({data: [selected]})
             .val(selected)

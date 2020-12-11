@@ -37,18 +37,32 @@ trait BelongsToRelation
      */
     protected $readonly = false;
 
+    /**
+     * @return $this
+     */
     public function askBeforeDelete() {
         $this->askBeforeDelete = true;
 
         return $this;
     }
 
+    /**
+     * Exclude items from modal grid
+     *
+     * @param array $value Excluded IDs
+     * @return $this
+     */
     public function exclude($value = []) {
         $this->exclude = is_array($value) ? $value : func_get_args();
 
         return $this;
     }
 
+    /**
+     * Make field readonly
+     *
+     * @return $this
+     */
     public function readonly() {
         $this->readonly = true;
 

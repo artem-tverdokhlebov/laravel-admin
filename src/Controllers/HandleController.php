@@ -165,7 +165,7 @@ class HandleController extends Controller
             if (!empty($exclude)) {
                 $selectable->model()->whereNotIn('id', $exclude);
             }
-            
+
             return $selectable->render();
         }
 

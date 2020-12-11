@@ -104,6 +104,9 @@ class Form implements Renderable
      */
     protected $tab = null;
 
+    /**
+     * @var Form\Box
+     */
     protected $box = null;
 
     /**
@@ -203,17 +206,15 @@ class Form implements Renderable
     /**
      * Use box to split form.
      *
-     * @param string  $title
+     * @param string $title
      * @param Closure $content
-     * @param bool    $expand
+     * @param bool $collapse
      *
      * @return \Encore\Admin\Widgets\Box
      */
     public function box($title, Closure $content, bool $collapse = false): \Encore\Admin\Widgets\Box
     {
-        $box = $this->setBox()->append($title, $content, $collapse);
-
-        return $box;
+        return $this->setBox()->append($title, $content, $collapse);
     }
 
     /**
@@ -257,9 +258,9 @@ class Form implements Renderable
     }
 
     /**
-     * Set Tab instance.
+     * Set Box instance.
      *
-     * @return Tab
+     * @return Box
      */
     public function setBox(): Box
     {
@@ -271,9 +272,9 @@ class Form implements Renderable
     }
 
     /**
-     * Get Tab instance.
+     * Get Box instance.
      *
-     * @return Tab
+     * @return Box
      */
     public function getBox()
     {
