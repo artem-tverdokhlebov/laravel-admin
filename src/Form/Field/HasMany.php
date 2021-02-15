@@ -508,13 +508,13 @@ EOT;
 
 var index = 0;
 $('.has-many-{$this->column}').off('click', '.add').on('click', '.add', function () {
-
-    var tpl = $(this).find('template.{$this->column}-tpl');
+    var block = $(this).closest('.has-many-{$this->column}');
+    var tpl = block.find('template.{$this->column}-tpl');
 
     index++;
 
     var template = tpl.html().replace(/{$defaultKey}/g, index);
-    $(this).find('.has-many-{$this->column}-forms').append(template);
+    block.find('.has-many-{$this->column}-forms').append(template);
     {$templateScript}
 
     {$orderableScript}
@@ -591,6 +591,8 @@ EOT;
         $script = <<<EOT
 
 $('.has-many-{$this->column} > .nav').off('click', 'i.close-tab').on('click', 'i.close-tab', function(){
+    var block = $(this).closest('.has-many-{$this->column}');
+
     var \$navTab = $(this).siblings('a');
     var \$pane = $(\$navTab.attr('href'));
     if( \$pane.hasClass('new') ){
@@ -600,7 +602,7 @@ $('.has-many-{$this->column} > .nav').off('click', 'i.close-tab').on('click', 'i
     }
     if(\$navTab.closest('li').hasClass('active')){
         \$navTab.closest('li').remove();
-        $('.has-many-{$this->column} > .nav > li:nth-child(1) > a').tab('show');
+        block.find('.nav > li:nth-child(1) > a').tab('show');
     }else{
         \$navTab.closest('li').remove();
     }
@@ -608,12 +610,13 @@ $('.has-many-{$this->column} > .nav').off('click', 'i.close-tab').on('click', 'i
 
 var index = 0;
 $('.has-many-{$this->column} > .header').off('click', '.add').on('click', '.add', function(){
+    var block = $(this).closest('.has-many-{$this->column}');
     index++;
-    var navTabHtml = $('.has-many-{$this->column} > template.nav-tab-tpl').html().replace(/{$defaultKey}/g, index);
-    var paneHtml = $('.has-many-{$this->column} > template.pane-tpl').html().replace(/{$defaultKey}/g, index);
-    $('.has-many-{$this->column} > .nav').append(navTabHtml);
-    $('.has-many-{$this->column} > .tab-content').append(paneHtml);
-    $('.has-many-{$this->column} > .nav > li:last-child a').tab('show');
+    var navTabHtml = block.find('template.nav-tab-tpl').html().replace(/{$defaultKey}/g, index);
+    var paneHtml = block.find('template.pane-tpl').html().replace(/{$defaultKey}/g, index);
+    block.find('.nav').append(navTabHtml);
+    block.find('.tab-content').append(paneHtml);
+    block.find('.nav > li:last-child a').tab('show');
     {$templateScript}
 });
 
@@ -652,19 +655,19 @@ EOT;
          */
         $script = <<<EOT
 var index = 0;
-$('.has-many-{$this->column}').on('click', '.add', function () {
-
-    var tpl = $(this).find('template.{$this->column}-tpl');
+$('.has-many-{$this->column}').off('click', '.add').on('click', '.add', function () {
+    var block = $(this).closest('.has-many-{$this->column}');
+    var tpl = block.find('template.{$this->column}-tpl');
 
     index++;
 
     var template = tpl.html().replace(/{$defaultKey}/g, index);
-    $(this).find('.has-many-{$this->column}-forms').append(template);
+    block.find('.has-many-{$this->column}-forms').append(template);
     {$templateScript}
     return false;
 });
 
-$('.has-many-{$this->column}').on('click', '.remove', function () {
+$('.has-many-{$this->column}').off('click', '.remove').on('click', '.remove', function () {
     var first_input_name = $(this).closest('.has-many-{$this->column}-form').find('input[name]:first').attr('name');
     if (first_input_name.match('{$this->column}\\\[new_')) {
         $(this).closest('.has-many-{$this->column}-form').remove();
