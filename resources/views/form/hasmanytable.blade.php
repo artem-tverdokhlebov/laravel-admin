@@ -7,7 +7,7 @@
 <div class="row">
     <div class="{{$viewClass['label']}}"><h4 class="pull-right">{{ $label }}</h4></div>
     <div class="{{$viewClass['field']}}">
-        <div id="has-many-{{$column}}" style="margin-top: 15px;">
+        <div class="has-many-{{$column}} {{$uniqueId}}" style="margin-top: 15px;">
             <table class="table table-has-many has-many-{{$column}}">
                 <thead>
                 <tr>
@@ -22,7 +22,7 @@
                     @endif
                 </tr>
                 </thead>
-                <tbody class="has-many-{{$column}}-forms">
+                <tbody class="has-many-{{$column}}-forms {{$uniqueId}}">
                 @foreach($forms as $pk => $form)
                     <tr class="has-many-{{$column}}-form fields-group">
 
@@ -52,7 +52,7 @@
                 </tbody>
             </table>
 
-            <template class="{{$column}}-tpl">
+            <template class="{{$column}}-tpl {{$uniqueId}}">
                 <tr class="has-many-{{$column}}-form fields-group">
 
                     {!! $template !!}
