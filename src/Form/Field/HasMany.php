@@ -808,6 +808,7 @@ EOT;
             'template'     => $template,
             'relationName' => $this->relationName,
             'options'      => $this->options,
+            'uniqueId'     => $this->uniqueId
         ]);
     }
 }
