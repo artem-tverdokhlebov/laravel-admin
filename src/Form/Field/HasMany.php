@@ -96,6 +96,8 @@ class HasMany extends Field
         if (count($arguments) == 2) {
             list($this->label, $this->builder) = $arguments;
         }
+
+        $this->uniqueId = uniqid();
     }
 
     /**
