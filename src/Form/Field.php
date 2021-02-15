@@ -261,8 +261,6 @@ class Field implements Renderable
      */
     public $isJsonType = false;
 
-    protected $uniqueId;
-
     /**
      * Field constructor.
      *
@@ -274,7 +272,6 @@ class Field implements Renderable
         $this->column = $this->formatColumn($column);
         $this->label = $this->formatLabel($arguments);
         $this->id = $this->formatId($column);
-        $this->uniqueId = uniqid();
     }
 
     /**

@@ -6,7 +6,7 @@
 
 <hr style="margin-top: 0px;">
 
-<div class="has-many-{{$column}} {{$uniqueId}}">
+<div id="has-many-{{$column}}" class="has-many-{{$column}}">
 
     <div class="has-many-{{$column}}-forms">
 
@@ -40,7 +40,7 @@
     </div>
 
 
-    <template class="{{$column}}-tpl {{$uniqueId}}">
+    <template class="{{$column}}-tpl">
         <div class="has-many-{{$column}}-form fields-group">
 
             {!! $template !!}

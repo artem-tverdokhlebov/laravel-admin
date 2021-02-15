@@ -96,8 +96,6 @@ class HasMany extends Field
         if (count($arguments) == 2) {
             list($this->label, $this->builder) = $arguments;
         }
-
-        $this->uniqueId = uniqid();
     }
 
     /**
@@ -511,12 +509,12 @@ EOT;
 var index = 0;
 $('.has-many-{$this->column}').off('click', '.add').on('click', '.add', function () {
 
-    var tpl = $('template.{$this->column}-tpl.{$this->uniqueId}');
+    var tpl = $(this).find('template.{$this->column}-tpl');
 
     index++;
 
     var template = tpl.html().replace(/{$defaultKey}/g, index);
-    $('.has-many-{$this->column}-forms.{$this->uniqueId}').append(template);
+    $(this).find('.has-many-{$this->column}-forms').append(template);
     {$templateScript}
 
     {$orderableScript}
@@ -656,12 +654,12 @@ EOT;
 var index = 0;
 $('.has-many-{$this->column}').on('click', '.add', function () {
 
-    var tpl = $('template.{$this->column}-tpl.{$this->uniqueId}');
+    var tpl = $(this).find('template.{$this->column}-tpl');
 
     index++;
 
     var template = tpl.html().replace(/{$defaultKey}/g, index);
-    $('.has-many-{$this->column}-forms.{$this->uniqueId}').append(template);
+    $(this).find('.has-many-{$this->column}-forms').append(template);
     {$templateScript}
     return false;
 });
@@ -809,8 +807,7 @@ EOT;
             'forms'        => $this->buildRelatedForms(),
             'template'     => $template,
             'relationName' => $this->relationName,
-            'options'      => $this->options,
-            'uniqueId'     => $this->uniqueId
+            'options'      => $this->options
         ]);
     }
 }

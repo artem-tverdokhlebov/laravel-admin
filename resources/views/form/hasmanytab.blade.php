@@ -12,7 +12,7 @@
         display: none;
     }
 </style>
-<div class="nav-tabs-custom has-many-{{$column}} {{$uniqueId}}">
+<div id="has-many-{{$column}}" class="nav-tabs-custom has-many-{{$column}}">
     <div class="row header">
         <div class="col-md-2 {{$viewClass['label']}}"><h4 class="pull-right">{{ $label }}</h4></div>
         <div class="col-md-8 {{$viewClass['field']}}">
@@ -34,7 +34,7 @@
 
     </ul>
     
-    <div class="tab-content has-many-{{$column}}-forms {{$uniqueId}}">
+    <div class="tab-content has-many-{{$column}}-forms">
 
         @foreach($forms as $pk => $form)
             <div class="tab-pane fields-group has-many-{{$column}}-form @if ($form == reset($forms)) active @endif" id="{{ $relationName . '_' . $pk }}">
