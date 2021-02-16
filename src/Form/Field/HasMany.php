@@ -506,12 +506,15 @@ EOT;
          */
         $script = <<<EOT
 
-var index = 0;
+$('#has-many-{$this->column}.has-many-{$this->column}').attr('data-index', 0);
+
 $('.has-many-{$this->column}').off('click', '.add').on('click', '.add', function () {
     var block = $(this).closest('.has-many-{$this->column}');
     var tpl = block.find('template.{$this->column}-tpl');
 
+    var index = block.attr('data-index');
     index++;
+    block.attr('data-index', index);
 
     var template = tpl.html().replace(/{$defaultKey}/g, index);
     block.find('.has-many-{$this->column}-forms').append(template);
@@ -608,10 +611,15 @@ $('.has-many-{$this->column} > .nav').off('click', 'i.close-tab').on('click', 'i
     }
 });
 
-var index = 0;
+$('#has-many-{$this->column}.has-many-{$this->column}').attr('data-index', 0);
+
 $('.has-many-{$this->column} > .header').off('click', '.add').on('click', '.add', function(){
     var block = $(this).closest('.has-many-{$this->column}');
+
+    var index = block.attr('data-index');
     index++;
+    block.attr('data-index', index);
+
     var navTabHtml = block.find('template.nav-tab-tpl').html().replace(/{$defaultKey}/g, index);
     var paneHtml = block.find('template.pane-tpl').html().replace(/{$defaultKey}/g, index);
     block.find('.nav').append(navTabHtml);
@@ -654,12 +662,15 @@ EOT;
          * {count} is increment number of current sub form count.
          */
         $script = <<<EOT
-var index = 0;
+$('#has-many-{$this->column}.has-many-{$this->column}').attr('data-index', 0);
+
 $('.has-many-{$this->column}').off('click', '.add').on('click', '.add', function () {
     var block = $(this).closest('.has-many-{$this->column}');
     var tpl = block.find('template.{$this->column}-tpl');
 
+    var index = block.attr('data-index');
     index++;
+    block.attr('data-index', index);
 
     var template = tpl.html().replace(/{$defaultKey}/g, index);
     block.find('.has-many-{$this->column}-forms').append(template);
