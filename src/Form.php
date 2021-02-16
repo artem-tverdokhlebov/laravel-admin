@@ -900,14 +900,14 @@ class Form implements Renderable
             if (is_array($columns)) {
                 foreach ($columns as $name => $column) {
                     if (is_array($value[$name]) && isset($prepared[$column])) {
-                        $prepared[$column] = array_merge_recursive($prepared[$column], $value[$name]);
+                        $prepared[$column] = $this->array_merge_recursive_distinct($prepared[$column], $value[$name]);
                     } else {
                         Arr::set($prepared, $column, $value[$name]);
                     }
                 }
             } elseif (is_string($columns)) {
                 if (is_array($value) && isset($prepared[$columns])) {
-                    $prepared[$columns] = array_merge_recursive($prepared[$columns], $value);
+                    $prepared[$columns] = $this->array_merge_recursive_distinct($prepared[$columns], $value);
                 } else {
                     Arr::set($prepared, $columns, $value);
                 }
@@ -915,6 +915,20 @@ class Form implements Renderable
         }
 
         return $prepared;
+    }
+
+    private function array_merge_recursive_distinct(array &$array1, array &$array2) {
+        $merged = $array1;
+
+        foreach ($array2 as $key => &$value) {
+            if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
+                $merged[$key] = $this->array_merge_recursive_distinct($merged[$key], $value);
+            } else {
+                $merged[$key] = $value;
+            }
+        }
+
+        return $merged;
     }
 
     /**
