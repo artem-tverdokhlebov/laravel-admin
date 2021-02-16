@@ -416,12 +416,12 @@ class NestedForm
 
         if (is_array($column)) {
             foreach ($column as $k => $name) {
-                $errorKey[$k] = sprintf('%s.%s.%s', $this->relationName, $key, $name);
+                $errorKey[$k] = sprintf('%s.%s.%s', $this->relationName, $key, str_replace('.', '->', $name));
                 $elementName[$k] = sprintf('%s[%s][%s]', $this->relationName, $key, $name);
                 $elementClass[$k] = [$this->relationName, $name];
             }
         } else {
-            $errorKey = sprintf('%s.%s.%s', $this->relationName, $key, $column);
+            $errorKey = sprintf('%s.%s.%s', $this->relationName, $key, str_replace('.', '->', $column));
             $elementName = sprintf('%s[%s][%s]', $this->relationName, $key, $column);
             $elementClass = [$this->relationName, $column];
         }
