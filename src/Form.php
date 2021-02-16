@@ -899,10 +899,18 @@ class Form implements Renderable
 
             if (is_array($columns)) {
                 foreach ($columns as $name => $column) {
-                    Arr::set($prepared, $column, $value[$name]);
+                    if (is_array($value[$name]) && isset($prepared[$column])) {
+                        $prepared[$column] = array_merge_recursive($prepared[$column], $value[$name]);
+                    } else {
+                        Arr::set($prepared, $column, $value[$name]);
+                    }
                 }
             } elseif (is_string($columns)) {
-                Arr::set($prepared, $columns, $value);
+                if (is_array($value) && isset($prepared[$columns])) {
+                    $prepared[$columns] = array_merge_recursive($prepared[$columns], $value);
+                } else {
+                    Arr::set($prepared, $columns, $value);
+                }
             }
         }
 
