@@ -827,4 +827,8 @@ EOT;
             'options'      => $this->options
         ]);
     }
+
+    public function nestedForm() {
+        return $this->buildNestedForm($this->column, $this->builder);
+    }
 }

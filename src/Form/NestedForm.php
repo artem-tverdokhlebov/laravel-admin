@@ -453,6 +453,8 @@ class NestedForm
                 $field->setForm($this->form);
             }
 
+            $field->setNestedForm($this);
+
             $field = $this->formatField($field);
 
             $this->pushField($field);

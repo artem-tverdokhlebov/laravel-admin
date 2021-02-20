@@ -178,6 +178,13 @@ class Field implements Renderable
     protected $form = null;
 
     /**
+     * Parent nested form.
+     *
+     * @var NestedForm
+     */
+    protected $nestedForm = null;
+
+    /**
      * View for field to render.
      *
      * @var string
@@ -465,6 +472,18 @@ class Field implements Renderable
     public function setForm(Form $form = null)
     {
         $this->form = $form;
+
+        return $this;
+    }
+
+    /**
+     * @param Form $form
+     *
+     * @return $this
+     */
+    public function setNestedForm(NestedForm $nestedForm = null)
+    {
+        $this->nestedForm = $nestedForm;
 
         return $this;
     }

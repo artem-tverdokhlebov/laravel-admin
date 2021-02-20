@@ -859,7 +859,13 @@ class Form implements Renderable
 
                         Arr::forget($related, static::REMOVE_FLAG_NAME);
 
-                        $child->fill($related);
+                        foreach ($related as $key => $value) {
+                            if (method_exists($child, $key) && $child->{$key}() instanceof Relations\BelongsToMany) {
+                                $child->$key()->sync($value);
+                            } else {
+                                $child->fill([ $key => $value]);
+                            }
+                        }
 
                         $child->save();
                     }
@@ -1092,7 +1098,27 @@ class Form implements Renderable
             $builder = $builder->withTrashed();
         }
 
-        $this->model = $builder->with($relations)->findOrFail($id);
+        $additionalRelations = [];
+
+        $this->fields()->each(function (Field $field) use ($builder, &$additionalRelations) {
+            if ($field instanceof Field\HasMany) {
+                $column = $field->column();
+
+                $related = $builder->$column()->getRelated();
+
+                $nestedForm = $field->nestedForm();
+
+                foreach ($nestedForm->fields() as $field) {
+                    if (method_exists($related, $field->column()) &&
+                        !method_exists(Model::class, $field->column())
+                    ) {
+                        $additionalRelations[] = $column.'.'.$field->column();
+                    }
+                }
+            }
+        });
+
+        $this->model = $builder->with(array_merge($relations, $additionalRelations))->findOrFail($id);
 
         $this->callEditing();
 
