@@ -10,6 +10,8 @@ class Display extends Field
 
     public function withoutBox() {
         $this->showBox = false;
+
+        return $this;
     }
 
     public function render()
