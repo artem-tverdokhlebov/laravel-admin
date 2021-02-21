@@ -28,17 +28,18 @@ class MultipleSelect extends Select
             return $this->otherKey;
         }
 
-        if (is_callable([$this->nestedForm->model(), $this->column]) &&
-            ($relation = $this->nestedForm->model()->{$this->column}()) instanceof BelongsToMany
+        if ($this->relationName &&
+            is_callable([$this->form->model(), $this->relationName]) &&
+            ($relation = $this->form->model()->{$this->relationName}()) &&
+            is_callable([$relation->getRelated(), $this->column]) &&
+            ($relation = $relation->getRelated()->{$this->column}() ?? null) instanceof BelongsToMany
         ) {
             /* @var BelongsToMany $relation */
             $fullKey = $relation->getQualifiedRelatedPivotKeyName();
             $fullKeyArray = explode('.', $fullKey);
 
             return $this->otherKey = end($fullKeyArray);
-        }
-
-        if (is_callable([$this->form->model(), $this->column]) &&
+        } else if (is_callable([$this->form->model(), $this->column]) &&
             ($relation = $this->form->model()->{$this->column}()) instanceof BelongsToMany
         ) {
             /* @var BelongsToMany $relation */

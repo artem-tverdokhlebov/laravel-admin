@@ -453,7 +453,9 @@ class NestedForm
                 $field->setForm($this->form);
             }
 
-            $field->setNestedForm($this);
+            if ($this->relationName) {
+                $field->setRelationName($this->relationName);
+            }
 
             $field = $this->formatField($field);
 

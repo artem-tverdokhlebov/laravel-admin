@@ -177,12 +177,7 @@ class Field implements Renderable
      */
     protected $form = null;
 
-    /**
-     * Parent nested form.
-     *
-     * @var NestedForm
-     */
-    protected $nestedForm = null;
+    protected $relationName = null;
 
     /**
      * View for field to render.
@@ -476,14 +471,9 @@ class Field implements Renderable
         return $this;
     }
 
-    /**
-     * @param Form $form
-     *
-     * @return $this
-     */
-    public function setNestedForm(NestedForm $nestedForm = null)
+    public function setRelationName($relationName)
     {
-        $this->nestedForm = $nestedForm;
+        $this->relationName = $relationName;
 
         return $this;
     }

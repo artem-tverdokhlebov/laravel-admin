@@ -562,7 +562,27 @@ class Form implements Renderable
             $builder = $builder->withTrashed();
         }
 
-        $this->model = $builder->with($this->getRelations())->findOrFail($id);
+        $additionalRelations = [];
+
+        $this->fields()->each(function (Field $field) use ($builder, &$additionalRelations) {
+            if ($field instanceof Field\HasMany) {
+                $column = $field->column();
+
+                $related = $builder->$column()->getRelated();
+
+                $nestedForm = $field->nestedForm();
+
+                foreach ($nestedForm->fields() as $field) {
+                    if (method_exists($related, $field->column()) &&
+                        !method_exists(Model::class, $field->column())
+                    ) {
+                        $additionalRelations[] = $column.'.'.$field->column();
+                    }
+                }
+            }
+        });
+
+        $this->model = $builder->with(array_merge($this->getRelations(), $additionalRelations))->findOrFail($id);
 
         $this->setFieldOriginalValue();
 
