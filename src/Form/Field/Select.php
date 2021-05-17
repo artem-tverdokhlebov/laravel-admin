@@ -300,7 +300,7 @@ $.ajax($ajaxOptions).done(function(data) {
       var value = $(element).data('value') + '';
       if (value) {
         value = value.split(',');
-        $(element).select2('val', value);
+        $(element).val(value).trigger("change");
       }
   });
 });
